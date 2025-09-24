@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Ranking - E-Learn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .ranking-row:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+        .highlight-row {
+            background-color: #e0e7ff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10l10 5 10-5V7L12 2zM4 9l8 4 8-4v6l-8 4-8-4V9z"/>
+                </svg>
+                <span class="text-2xl font-bold text-gray-800">E-Learn</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Browse Courses</a>
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">My Dashboard</a>
+                <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors duration-200">Ranking</a>
+            </nav>
+            <a href="#" class="hidden md:inline-block px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200">Log Out</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-4">Course Leaderboard</h1>
+        <p class="text-center text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+            See how you rank against other learners on this course's final exam.
+        </p>
+
+        <!-- Your Rank Section -->
+        <div id="your-rank-section" class="bg-white rounded-2xl shadow-lg p-6 mb-8 text-center">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-2">Your Rank</h2>
+            <p id="your-rank-text" class="text-3xl font-extrabold text-gray-800">Loading...</p>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Rank</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Exam Score (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Leaderboard rows will be dynamically populated here -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-8 text-center text-gray-500 text-sm shadow-inner">
+        &copy; 2024 E-Learn. All rights reserved.
+    </footer>
+
+    <script>
+        const users = [
+            { name: "Alice Johnson", score: 98, isCurrentUser: false },
+            { name: "Bob Smith", score: 85, isCurrentUser: false },
+            { name: "Charlie Brown", score: 92, isCurrentUser: false },
+            { name: "David Williams", score: 76, isCurrentUser: false },
+            { name: "You (Current User)", score: 95, isCurrentUser: true },
+            { name: "Eve Davis", score: 89, isCurrentUser: false },
+            { name: "Frank Miller", score: 91, isCurrentUser: false },
+            { name: "Grace Wilson", score: 88, isCurrentUser: false },
+            { name: "Henry Moore", score: 79, isCurrentUser: false },
+        ];
+
+        // Sort users by score in descending order
+        users.sort((a, b) => b.score - a.score);
+
+        const tableBody = document.getElementById('leaderboard-table-body');
+        const yourRankText = document.getElementById('your-rank-text');
+
+        // Function to render the leaderboard table
+        function renderLeaderboard() {
+            tableBody.innerHTML = ''; // Clear existing rows
+            users.forEach((user, index) => {
+                const rank = index + 1;
+                const row = document.createElement('tr');
+                row.className = `ranking-row ${user.isCurrentUser ? 'highlight-row' : ''}`;
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${rank}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${user.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${user.score}%</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to display the current user's rank
+        function displayCurrentUserRank() {
+            const currentUser = users.find(user => user.isCurrentUser);
+            if (currentUser) {
+                const rank = users.indexOf(currentUser) + 1;
+                yourRankText.textContent = `#${rank} - ${currentUser.score}%`;
+            } else {
+                yourRankText.textContent = "You are not ranked yet.";
+            }
+        }
+
+        // Run the functions when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLeaderboard();
+            displayCurrentUserRank();
+        });
+    </script>
+</body>
+</html>
+

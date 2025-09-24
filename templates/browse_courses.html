@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Courses - E-Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .course-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10l10 5 10-5V7L12 2zM4 9l8 4 8-4v6l-8 4-8-4V9z"/>
+                </svg>
+                <span class="text-2xl font-bold text-gray-800">E-Learn</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors duration-200">Browse Courses</a>
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">My Dashboard</a>
+            </nav>
+            <a href="#" class="hidden md:inline-block px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200">Log Out</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-4">Browse Our Courses</h1>
+        <p class="text-center text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+            Find the perfect course for you by searching or exploring all our offerings.
+        </p>
+
+        <!-- Search and Filter Section -->
+        <div class="mb-8 flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+            <input 
+                type="text" 
+                id="course-search" 
+                placeholder="Search by course name or ID..." 
+                class="w-full md:w-96 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+            >
+            <button 
+                onclick="clearSearch()"
+                class="w-full md:w-auto px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200"
+            >
+                Clear Search
+            </button>
+        </div>
+
+        <!-- Courses Grid -->
+        <div id="courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Course cards will be dynamically added here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-8 text-center text-gray-500 text-sm shadow-inner">
+        &copy; 2024 E-Learn. All rights reserved.
+    </footer>
+
+    <script>
+        const courses = [
+            { id: 'WEB-101', name: 'Modern Web Development', description: 'Build dynamic websites using the latest technologies like React, Node.js, and Tailwind CSS.', image: 'https://placehold.co/600x400/1e293b/white?text=Web+Dev', rating: '4.8', students: 120 },
+            { id: 'DATA-201', name: 'Introduction to Data Science', description: 'Master data analysis, visualization, and machine learning with Python and its powerful libraries.', image: 'https://placehold.co/600x400/1e293b/white?text=Data+Science', rating: '4.9', students: 95 },
+            { id: 'APP-301', name: 'React Native for Beginners', description: 'Build cross-platform mobile applications for iOS and Android using a single codebase.', image: 'https://placehold.co/600x400/1e293b/white?text=Mobile+App', rating: '4.7', students: 150 },
+            { id: 'UX-401', name: 'Complete UI/UX Design', description: 'Learn the principles of user interface and user experience design to create intuitive and beautiful products.', image: 'https://placehold.co/600x400/1e293b/white?text=UI/UX', rating: '4.6', students: 78 },
+            { id: 'ML-501', name: 'Machine Learning Fundamentals', description: 'Dive into the world of AI, covering core algorithms, model training, and practical applications.', image: 'https://placehold.co/600x400/1e293b/white?text=ML', rating: '4.9', students: 110 },
+            { id: 'CYBER-601', name: 'Foundations of Cybersecurity', description: 'Understand the essential concepts of network security, ethical hacking, and threat protection.', image: 'https://placehold.co/600x400/1e293b/white?text=Cybersecurity', rating: '4.7', students: 85 },
+        ];
+
+        const coursesGrid = document.getElementById('courses-grid');
+        const searchInput = document.getElementById('course-search');
+
+        // Function to render a single course card
+        function renderCourse(course) {
+            return `
+                <div 
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden course-card" 
+                    data-course-name="${course.name.toLowerCase()}" 
+                    data-course-id="${course.id.toLowerCase()}"
+                >
+                    <img src="${course.image}" alt="${course.name}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold mb-2">${course.name}</h2>
+                        <span class="text-sm font-semibold text-indigo-600 mb-2 block">ID: ${course.id}</span>
+                        <p class="text-gray-600 text-sm mb-4">${course.description}</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <span>${course.rating} <span class="text-yellow-400">★ ★ ★ ★ ☆</span></span>
+                            <span>${course.students} students</span>
+                        </div>
+                        <a href="#" class="block w-full text-center bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200">
+                            View Course
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to filter and display courses
+        function filterCourses() {
+            const query = searchInput.value.toLowerCase().trim();
+            const filteredCourses = courses.filter(course => {
+                const nameMatch = course.name.toLowerCase().includes(query);
+                const idMatch = course.id.toLowerCase().includes(query);
+                return nameMatch || idMatch;
+            });
+            
+            displayCourses(filteredCourses);
+        }
+
+        // Function to display the courses in the grid
+        function displayCourses(courseList) {
+            coursesGrid.innerHTML = courseList.map(renderCourse).join('');
+        }
+        
+        // Function to clear the search input and show all courses
+        function clearSearch() {
+            searchInput.value = '';
+            displayCourses(courses);
+        }
+
+        // Initial render of all courses
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCourses(courses);
+        });
+
+        // Add event listener to the search input
+        searchInput.addEventListener('input', filterCourses);
+    </script>
+</body>
+</html>
+

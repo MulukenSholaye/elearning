@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course: Modern Web Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .progress-bar-inner {
+            transition: width 0.5s ease-in-out;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .quiz-option {
+            transition: all 0.2s ease-in-out;
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .quiz-option.selected {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            color: #10b981;
+            border-color: #34d399;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            color: #ef4444;
+            border-color: #f87171;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10l10 5 10-5V7L12 2zM4 9l8 4 8-4v6l-8 4-8-4V9z"/>
+                </svg>
+                <span class="text-2xl font-bold text-gray-800">E-Learn</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Browse Courses</a>
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">My Dashboard</a>
+            </nav>
+            <a href="#" class="hidden md:inline-block px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200">Log Out</a>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8 flex-1 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <!-- Sidebar for Course Navigation -->
+        <aside class="md:col-span-1 lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                <h2 class="text-xl font-bold mb-4">Course Progress</h2>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full progress-bar-inner" style="width: 0%;"></div>
+                </div>
+                <p id="progress-text" class="text-sm text-gray-600 mb-4">0% Complete</p>
+                <h2 class="text-xl font-bold mb-4">Course Topics</h2>
+                <ul id="topic-list" class="space-y-2">
+                    <!-- Topics will be dynamically added here -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="md:col-span-3 lg:col-span-4 bg-white rounded-2xl shadow-lg p-8">
+            <div id="course-content">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Message Box for Alerts -->
+    <div id="message-box" class="fixed inset-x-0 bottom-4 flex justify-center z-50 transition-transform duration-300 ease-out transform translate-y-full opacity-0">
+        <div id="message-content" class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+            <span id="message-text"></span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-8 text-center text-gray-500 text-sm shadow-inner">
+        &copy; 2024 E-Learn. All rights reserved.
+    </footer>
+
+    <script>
+        // Data for course content
+        const courseData = [
+            {
+                id: 'intro',
+                type: 'video',
+                title: '1. Introduction to Web Development',
+                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Placeholder video
+                description: 'Welcome to the course! This video provides a high-level overview of modern web development and what you will learn.',
+                isCompleted: false
+            },
+            {
+                id: 'html-basics',
+                type: 'video',
+                title: '2. HTML and CSS Fundamentals',
+                videoUrl: 'https://www.youtube.com/embed/G3e-fE_61fA', // Placeholder video
+                description: 'Learn the foundational languages of the web: HTML for structure and CSS for styling. We will cover basic syntax and common tags.',
+                isCompleted: false
+            },
+            {
+                id: 'javascript-intro',
+                type: 'video',
+                title: '3. An Introduction to JavaScript',
+                videoUrl: 'https://www.youtube.com/embed/W6NZfCO5-hc', // Placeholder video
+                description: 'Explore the power of JavaScript, the language that brings interactivity to websites. We will cover variables, data types, and functions.',
+                isCompleted: false
+            },
+            {
+                id: 'quiz-1',
+                type: 'quiz',
+                title: '4. Quiz: Web Fundamentals',
+                description: 'Test your knowledge of HTML, CSS, and JavaScript basics with this short quiz.',
+                question: 'Which of the following is used to add interactivity to a website?',
+                options: ['HTML', 'CSS', 'JavaScript', 'Python'],
+                answer: 'JavaScript',
+                isCompleted: false
+            },
+            {
+                id: 'react-intro',
+                type: 'video',
+                title: '5. What is React?',
+                videoUrl: 'https://www.youtube.com/embed/Ke90Tje7e04', // Placeholder video
+                description: 'Learn about React, a popular JavaScript library for building user interfaces. We will discuss its core concepts and benefits.',
+                isCompleted: false
+            },
+            {
+                id: 'final-quiz',
+                type: 'quiz',
+                title: '6. Final Quiz: Course Summary',
+                description: 'Congratulations! This is the final assessment to test your overall knowledge of the course material. Take your time and good luck!',
+                question: 'Which of the following is not a key principle of functional components in React?',
+                options: ['Using Hooks for state management', 'Encapsulating logic within a single file', 'Using the "this" keyword for component state', 'Returning JSX elements to describe the UI'],
+                answer: 'Using the "this" keyword for component state',
+                isCompleted: false
+            }
+        ];
+
+        const topicList = document.getElementById('topic-list');
+        const courseContent = document.getElementById('course-content');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        // Message box elements
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+
+        // Function to show a temporary message
+        function showMessage(message, duration = 3000) {
+            messageText.textContent = message;
+            messageBox.classList.remove('translate-y-full', 'opacity-0');
+            messageBox.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                messageBox.classList.remove('translate-y-0', 'opacity-100');
+                messageBox.classList.add('translate-y-full', 'opacity-0');
+            }, duration);
+        }
+
+        // Function to update the progress bar
+        function updateProgress() {
+            const completedCount = courseData.filter(topic => topic.isCompleted).length;
+            const totalCount = courseData.length;
+            const percentage = Math.floor((completedCount / totalCount) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${percentage}% Complete`;
+        }
+
+        // Function to render a single topic in the sidebar
+        function renderTopic(topic) {
+            const statusClass = topic.isCompleted ? 'text-green-600 font-bold' : 'text-gray-500';
+            const statusIcon = topic.isCompleted ? 
+                '<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' : 
+                '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            
+            return `
+                <li>
+                    <a href="#" data-id="${topic.id}" class="flex items-center p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 group">
+                        ${statusIcon}
+                        <span class="${statusClass} group-hover:text-gray-800">${topic.title}</span>
+                    </a>
+                </li>
+            `;
+        }
+
+        // Function to render the video player content
+        function renderVideoContent(topic) {
+            return `
+                <div class="relative pt-[56.25%] mb-6 rounded-xl overflow-hidden shadow-xl">
+                    <iframe 
+                        class="absolute top-0 left-0 w-full h-full" 
+                        src="${topic.videoUrl}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                    ></iframe>
+                </div>
+                <h2 class="text-3xl font-extrabold mb-4">${topic.title}</h2>
+                <p class="text-gray-700 mb-6">${topic.description}</p>
+                <div class="flex justify-end">
+                    <button id="mark-complete-btn" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200">
+                        Mark as Complete
+                    </button>
+                </div>
+            `;
+        }
+
+        // Function to render the quiz content
+        function renderQuizContent(topic) {
+            const optionsHtml = topic.options.map(option => `
+                <div class="quiz-option p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 mb-3" data-answer="${option}">
+                    ${option}
+                </div>
+            `).join('');
+
+            return `
+                <h2 class="text-3xl font-extrabold mb-4">${topic.title}</h2>
+                <p class="text-gray-700 mb-6">${topic.description}</p>
+                <div class="bg-indigo-50 p-6 rounded-2xl mb-8">
+                    <h3 class="text-xl font-bold mb-4">${topic.question}</h3>
+                    <div id="quiz-options-container" class="space-y-4">
+                        ${optionsHtml}
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button id="check-answer-btn" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200">
+                        Check Answer
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Function to display the active content
+        function showContent(topicId) {
+            const topic = courseData.find(t => t.id === topicId);
+            if (!topic) return;
+
+            courseContent.innerHTML = '';
+            
+            if (topic.type === 'video') {
+                courseContent.innerHTML = renderVideoContent(topic);
+                document.getElementById('mark-complete-btn').addEventListener('click', () => {
+                    topic.isCompleted = true;
+                    updateProgress();
+                    renderSidebar();
+                    showMessage(`You've completed "${topic.title}"!`);
+                });
+            } else if (topic.type === 'quiz') {
+                courseContent.innerHTML = renderQuizContent(topic);
+                const checkBtn = document.getElementById('check-answer-btn');
+                const optionsContainer = document.getElementById('quiz-options-container');
+
+                // Check if the topic has already been completed, if so, disable the button
+                if (topic.isCompleted) {
+                    checkBtn.disabled = true;
+                    checkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    showMessage("You've already completed this quiz.");
+                }
+
+                optionsContainer.addEventListener('click', (e) => {
+                    if (topic.isCompleted) return;
+                    const option = e.target.closest('.quiz-option');
+                    if (!option) return;
+
+                    // Reset all options
+                    optionsContainer.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Highlight the selected one
+                    option.classList.add('selected');
+                });
+
+                checkBtn.addEventListener('click', () => {
+                    if (topic.isCompleted) return;
+                    const selectedOption = optionsContainer.querySelector('.quiz-option.selected');
+                    if (!selectedOption) {
+                        showMessage('Please select an option first!');
+                        return;
+                    }
+
+                    const isCorrect = selectedOption.dataset.answer === topic.answer;
+                    
+                    // Add visual feedback
+                    optionsContainer.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                        if (opt.dataset.answer === topic.answer) {
+                            opt.classList.add('correct');
+                        } else {
+                            opt.classList.add('incorrect');
+                        }
+                    });
+
+                    if (isCorrect) {
+                        topic.isCompleted = true;
+                        updateProgress();
+                        renderSidebar();
+                        showMessage('Correct! Quiz completed!');
+                    } else {
+                        showMessage('Incorrect answer. Try again!');
+                    }
+                    
+                    checkBtn.disabled = true;
+                    checkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                });
+            }
+        }
+        
+        // Function to render the sidebar
+        function renderSidebar() {
+            topicList.innerHTML = courseData.map(renderTopic).join('');
+            
+            // Add click listeners to sidebar links
+            topicList.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const topicId = e.currentTarget.dataset.id;
+                    showContent(topicId);
+                });
+            });
+        }
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            updateProgress();
+            // Show the first topic by default
+            if (courseData.length > 0) {
+                showContent(courseData[0].id);
+            }
+        });
+    </script>
+</body>
+</html>
+
