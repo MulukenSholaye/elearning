@@ -1,5 +1,5 @@
 # E-Learning Platform
-This is a front-end prototype for a comprehensive e-learning platform, built using modern web technologies. It is designed to be a single-page application experience, with each HTML file representing a key section of the platform.
+This is a front-end prototype for a comprehensive e-learning platform, built using modern web technologies. It is designed to be a multi-page application experience, with each HTML file representing a key section of the platform.
 ![elearning](https://github.com/MulukenSholaye/elearning/blob/b384c3584a6c6c42efc28a65175e67243fee92e1/screenshots/istockphoto-499924122-612x612.jpg)
 # Features
 The platform includes several key pages to manage the learning journey:
