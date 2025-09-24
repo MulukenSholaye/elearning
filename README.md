@@ -44,3 +44,15 @@ JavaScript: For all interactive elements, including form switching, progress tra
 
 # How to View
 To view the pages, simply open any of the .html files in your web browser. All styles and scripts are self-contained within each file.
+# Screenshots
+* ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-36-39.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-36-39.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-36-39.png)
+  * ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-37-51.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-39-02.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-40-09.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-42-30.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-44-52.png)
+*  ![login page](https://github.com/MulukenSholaye/elearning/blob/8c0ae380780eb316cdb6cc994df5c82c2b1fc3c3/screenshots/Screenshot%20from%202025-09-24%2010-46-04.png)
+
+
